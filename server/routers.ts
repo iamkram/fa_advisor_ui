@@ -103,6 +103,35 @@ export const appRouter = router({
         });
         return { success: true };
       }),
+    
+    transcribeAndGenerateNotes: protectedProcedure
+      .input(z.object({
+        householdId: z.number(),
+        audioData: z.string(), // base64 encoded audio
+        clientName: z.string(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        const { transcribeAndGenerateNotes } = await import("./services/meetingNotes");
+        
+        const result = await transcribeAndGenerateNotes(
+          input.audioData,
+          input.clientName
+        );
+        
+        // Save as interaction
+        await db.createInteraction({
+          advisorId: ctx.user.id,
+          householdId: input.householdId,
+          interactionType: "meeting",
+          subject: `Meeting with ${input.clientName}`,
+          description: result.notes,
+          interactionDate: new Date(),
+          outcome: result.summary,
+          nextSteps: result.nextSteps.join('; '),
+        });
+        
+        return result;
+      }),
   }),
 
   // Tasks
@@ -121,6 +150,40 @@ export const appRouter = router({
       }))
       .mutation(async ({ ctx, input }) => {
         await db.createTask({
+          advisorId: ctx.user.id,
+          ...input,
+        });
+        return { success: true };
+      }),
+  }),
+
+  // Interactions
+  interactions: router({  
+    getByHousehold: protectedProcedure
+      .input(z.object({ householdId: z.number() }))
+      .query(async ({ input }) => {
+        return await db.getInteractionsByHousehold(input.householdId);
+      }),
+    
+    getRecent: protectedProcedure
+      .input(z.object({ limit: z.number().optional() }))
+      .query(async ({ ctx, input }) => {
+        return await db.getInteractionsByAdvisor(ctx.user.id, input.limit);
+      }),
+    
+    create: protectedProcedure
+      .input(z.object({
+        householdId: z.number(),
+        interactionType: z.enum(["email", "call", "meeting", "note"]),
+        subject: z.string(),
+        description: z.string().optional(),
+        interactionDate: z.date(),
+        duration: z.number().optional(),
+        outcome: z.string().optional(),
+        nextSteps: z.string().optional(),
+      }))
+      .mutation(async ({ ctx, input }) => {
+        await db.createInteraction({
           advisorId: ctx.user.id,
           ...input,
         });

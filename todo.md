@@ -102,3 +102,24 @@
 - [x] Fixed database schema for account types
 - [x] Test data generator working correctly
 - [ ] Display interaction timeline in client detail (future enhancement)
+
+## Phase 16: Interaction Timeline
+- [x] Create Activity section in client detail page
+- [x] Build timeline component with chronological display
+- [x] Add filtering by interaction type
+- [x] Show interaction details (subject, description, outcome)
+- [x] Add visual timeline with icons
+- [x] Integrate with tRPC backe## Phase 17: Real-Time Portfolio Sync
+- [x] Design custodian API integration framework
+- [x] Add scheduled job for nightly sync (2 AM)
+- [x] Implement Schwab API client
+- [x] Implement Fidelity API client
+- [x] Create comprehensive documentation
+- [ ] Test sync with real credentials (requires API keys)mapping and reconciliatio## Phase 18: AI Meeting Notes
+- [x] Add Meeting Recorder component to client detail
+- [x] Implement speech-to-text transcription with Whisper API
+- [x] Generate structured notes with Claude
+- [x] Extract action items and next steps automatically
+- [x] Save meeting notes as interactions
+- [x] Real-time recording with timer
+- [x] Copy notes to clipboard functionalitytable

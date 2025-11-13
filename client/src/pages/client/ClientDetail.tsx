@@ -1,4 +1,3 @@
-import { useParams } from "wouter";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -18,13 +17,21 @@ import {
   FileText,
   Sparkles,
 } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useParams } from "wouter";
 import { useState } from "react";
 import { AIDrawer } from "@/components/ai/AIDrawer";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import InteractionTimeline from "@/components/interactions/InteractionTimeline";
+import MeetingRecorder from "@/components/meetings/MeetingRecorder";
+import { trpc } from "@/lib/trpc";
 
 export default function ClientDetail() {
   const { id } = useParams();
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
+  const householdId = parseInt(id || "1");
+  
+  // Fetch interactions
+  const { data: interactions = [] } = trpc.interactions.getByHousehold.useQuery({ householdId });
 
   // Mock client data
   const client = {
@@ -306,6 +313,23 @@ export default function ClientDetail() {
               </CardContent>
             </Card>
           </div>
+        </div>
+        
+        {/* Meeting Recorder Section */}
+        <div className="mt-8">
+          <MeetingRecorder 
+            householdId={householdId} 
+            clientName={client.name}
+            onNotesGenerated={(notes) => {
+              console.log('Notes generated:', notes);
+              // Optionally refresh interactions to show the new meeting
+            }}
+          />
+        </div>
+        
+        {/* Activity Timeline Section */}
+        <div className="mt-8">
+          <InteractionTimeline householdId={householdId} interactions={interactions} />
         </div>
       </div>
 

@@ -1,20 +1,25 @@
-import { eq, desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { 
-  InsertUser, 
-  users, 
-  clients, 
-  holdings, 
-  meetings, 
-  tasks, 
-  newsCache, 
+import {
+  users,
+  households,
+  accounts,
+  holdings,
+  meetings,
+  tasks,
+  newsCache,
   aiQueries,
-  InsertClient,
+  interactions,
+  sp500Companies,
+  InsertUser,
+  InsertHousehold,
+  InsertAccount,
   InsertHolding,
   InsertMeeting,
   InsertTask,
   InsertNewsCache,
   InsertAIQuery,
+  InsertInteraction,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -50,7 +55,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     };
     const updateSet: Record<string, unknown> = {};
 
-    const textFields = ["name", "email", "loginMethod", "advisorId", "firmName", "photoUrl"] as const;
+    const textFields = ["name", "email", "loginMethod"] as const;
     type TextField = (typeof textFields)[number];
 
     const assignNullable = (field: TextField) => {
@@ -104,112 +109,95 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// Client queries
-export async function getClientsByAdvisor(advisorId: number) {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(clients).where(eq(clients.advisorId, advisorId));
-}
-
-export async function getClientById(clientId: number) {
-  const db = await getDb();
-  if (!db) return undefined;
-  
-  const result = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
-  return result.length > 0 ? result[0] : undefined;
-}
-
-export async function createClient(client: InsertClient) {
+// Households
+export async function getHouseholdsByAdvisor(advisorId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  await db.insert(clients).values(client);
+  return db.select().from(households).where(eq(households.advisorId, advisorId));
 }
 
-// Holdings queries
-export async function getHoldingsByClient(clientId: number) {
+export async function getHouseholdById(id: number) {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) throw new Error("Database not available");
   
-  // Get accounts for this client's household, then get holdings
-  // For now, return empty array as we need to join through accounts
-  return [];
+  const result = await db.select().from(households).where(eq(households.id, id)).limit(1);
+  return result[0];
 }
 
+// Accounts
+export async function getAccountsByHousehold(householdId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db.select().from(accounts).where(eq(accounts.householdId, householdId));
+}
+
+// Holdings
 export async function getHoldingsByAccount(accountId: number) {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) throw new Error("Database not available");
   
-  return await db.select().from(holdings).where(eq(holdings.accountId, accountId));
+  return db.select().from(holdings).where(eq(holdings.accountId, accountId));
 }
 
-export async function createHolding(holding: InsertHolding) {
+// Interactions
+export async function getInteractionsByHousehold(householdId: number) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  await db.insert(holdings).values(holding);
+  return db
+    .select()
+    .from(interactions)
+    .where(eq(interactions.householdId, householdId))
+    .orderBy(desc(interactions.interactionDate));
 }
 
-// Meeting queries
-export async function getMeetingsByClient(clientId: number) {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(meetings)
-    .where(eq(meetings.clientId, clientId))
-    .orderBy(desc(meetings.meetingDate));
-}
-
-export async function createMeeting(meeting: InsertMeeting) {
+export async function getInteractionsByAdvisor(advisorId: number, limit: number = 50) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  await db.insert(meetings).values(meeting);
-}
-
-// Task queries
-export async function getTasksByAdvisor(advisorId: number) {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(tasks)
-    .where(eq(tasks.advisorId, advisorId))
-    .orderBy(desc(tasks.createdAt));
-}
-
-export async function createTask(task: InsertTask) {
-  const db = await getDb();
-  if (!db) throw new Error("Database not available");
-  
-  await db.insert(tasks).values(task);
-}
-
-// News cache queries
-export async function getNewsByTicker(ticker: string, limit: number = 10) {
-  const db = await getDb();
-  if (!db) return [];
-  
-  return await db.select().from(newsCache)
-    .where(eq(newsCache.ticker, ticker))
-    .orderBy(desc(newsCache.publishedAt))
+  return db
+    .select()
+    .from(interactions)
+    .where(eq(interactions.advisorId, advisorId))
+    .orderBy(desc(interactions.interactionDate))
     .limit(limit);
 }
 
-export async function cacheNews(news: InsertNewsCache) {
+export async function createInteraction(interaction: InsertInteraction) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   
-  await db.insert(newsCache).values(news);
+  const result = await db.insert(interactions).values(interaction);
+  return result[0].insertId;
 }
 
-// AI query history
-export async function getAIQueryHistory(advisorId: number, limit: number = 20) {
+// Meetings
+export async function getMeetingsByHousehold(householdId: number) {
   const db = await getDb();
-  if (!db) return [];
+  if (!db) throw new Error("Database not available");
   
-  return await db.select().from(aiQueries)
-    .where(eq(aiQueries.advisorId, advisorId))
+  return db.select().from(meetings).where(eq(meetings.householdId, householdId));
+}
+
+// Tasks
+export async function getTasksByAdvisor(advisorId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db.select().from(tasks).where(eq(tasks.advisorId, advisorId));
+}
+
+// AI Queries
+export async function getAIQueriesByHousehold(householdId: number, limit: number = 10) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db
+    .select()
+    .from(aiQueries)
+    .where(eq(aiQueries.householdId, householdId))
     .orderBy(desc(aiQueries.createdAt))
     .limit(limit);
 }
@@ -219,4 +207,105 @@ export async function saveAIQuery(query: InsertAIQuery) {
   if (!db) throw new Error("Database not available");
   
   await db.insert(aiQueries).values(query);
+}
+
+// S&P 500 Companies
+export async function getAllSP500Companies() {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db.select().from(sp500Companies);
+}
+
+// Create operations
+export async function createMeeting(meeting: InsertMeeting) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(meetings).values(meeting);
+  return result[0].insertId;
+}
+
+export async function createTask(task: InsertTask) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(tasks).values(task);
+  return result[0].insertId;
+}
+
+export async function createHolding(holding: InsertHolding) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const result = await db.insert(holdings).values(holding);
+  return result[0].insertId;
+}
+
+// AI Query History
+export async function getAIQueryHistory(householdId: number, limit: number = 20) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db
+    .select()
+    .from(aiQueries)
+    .where(eq(aiQueries.householdId, householdId))
+    .orderBy(desc(aiQueries.createdAt))
+    .limit(limit);
+}
+
+// News cache
+export async function getNewsByTicker(ticker: string, limit: number = 10) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  return db
+    .select()
+    .from(newsCache)
+    .where(eq(newsCache.ticker, ticker))
+    .orderBy(desc(newsCache.publishedAt))
+    .limit(limit);
+}
+
+// Backward compatibility aliases (client = household)
+export async function getClientsByAdvisor(advisorId: number) {
+  return getHouseholdsByAdvisor(advisorId);
+}
+
+export async function getClientById(id: number) {
+  return getHouseholdById(id);
+}
+
+export async function createClient(client: { advisorId: number; clientName: string; email?: string; phone?: string; riskTolerance?: "conservative" | "moderate" | "aggressive" }) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const household: InsertHousehold = {
+    advisorId: client.advisorId,
+    householdName: client.clientName,
+    email: client.email,
+    phone: client.phone,
+    riskTolerance: client.riskTolerance,
+  };
+  
+  const result = await db.insert(households).values(household);
+  return result[0].insertId;
+}
+
+export async function getHoldingsByClient(householdId: number) {
+  // Get all accounts for this household, then get all holdings
+  const accountsList = await getAccountsByHousehold(householdId);
+  const allHoldings = [];
+  
+  for (const account of accountsList) {
+    const accountHoldings = await getHoldingsByAccount(account.id);
+    allHoldings.push(...accountHoldings);
+  }
+  
+  return allHoldings;
+}
+
+export async function getMeetingsByClient(householdId: number) {
+  return getMeetingsByHousehold(householdId);
 }
