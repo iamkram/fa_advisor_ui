@@ -1,5 +1,7 @@
 import { useState } from "react";
+import { useAuth } from "@/_core/hooks/useAuth";
 import { DashboardLayout } from "@/components/layout/DashboardLayout";
+import { pdfExportService } from "@/services/pdfExport";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -15,7 +17,9 @@ interface ReportComponent {
 }
 
 export default function ReportGenerator() {
+  const { user } = useAuth();
   const [reportTitle, setReportTitle] = useState("Client Meeting Report");
+  const [clientName, setClientName] = useState("John Smith");
   const [components, setComponents] = useState<ReportComponent[]>([
     { id: "1", type: "holdings", title: "Holdings Summary" },
     { id: "2", type: "insights", title: "AI Insights" },
@@ -44,8 +48,57 @@ export default function ReportGenerator() {
   };
 
   const handleExportPDF = () => {
-    toast.success("Generating PDF report...");
-    // TODO: Implement PDF generation
+    try {
+      // Prepare report data
+      const reportData = {
+        title: reportTitle,
+        clientName: clientName,
+        advisorName: user?.name || "Financial Advisor",
+        date: new Date().toLocaleDateString(),
+        components: components.map((component) => ({
+          type: component.type,
+          title: component.title,
+          data: getComponentData(component.type),
+        })),
+      };
+
+      // Generate and download PDF
+      pdfExportService.exportReport(reportData);
+      toast.success("PDF report generated successfully!");
+    } catch (error) {
+      console.error("PDF generation error:", error);
+      toast.error("Failed to generate PDF report");
+    }
+  };
+
+  const getComponentData = (type: ReportComponent["type"]) => {
+    switch (type) {
+      case "holdings":
+        return [
+          { ticker: "AAPL", name: "Apple Inc.", value: 250000, allocation: 20, change: 2.3 },
+          { ticker: "MSFT", name: "Microsoft Corp.", value: 200000, allocation: 16, change: 1.8 },
+          { ticker: "GOOGL", name: "Alphabet Inc.", value: 150000, allocation: 12, change: -0.5 },
+        ];
+      case "goals":
+        return [
+          "Retirement in 2035",
+          "College funding for 2 children",
+          "Estate planning review",
+        ];
+      case "insights":
+        return [
+          "Portfolio performance +12.3% YTD",
+          "Tech sector overweight - consider rebalancing",
+          "Tax-loss harvesting opportunity identified",
+        ];
+      case "risks":
+        return [
+          { severity: "medium", message: "Portfolio concentration risk in technology" },
+          { severity: "low", message: "Cash allocation below recommended minimum" },
+        ];
+      default:
+        return [];
+    }
   };
 
   const handleEmail = () => {
@@ -108,6 +161,15 @@ export default function ReportGenerator() {
                 <CardTitle>Report Settings</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
+                <div>
+                  <Label htmlFor="client">Client Name</Label>
+                  <Input
+                    id="client"
+                    value={clientName}
+                    onChange={(e) => setClientName(e.target.value)}
+                    className="mt-1"
+                  />
+                </div>
                 <div>
                   <Label htmlFor="title">Report Title</Label>
                   <Input

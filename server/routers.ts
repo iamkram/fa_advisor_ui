@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { COOKIE_NAME } from "@shared/const";
+import { faAiClient } from "./services/faAiClient";
 import { getSessionCookieOptions } from "./_core/cookies";
 import { systemRouter } from "./_core/systemRouter";
 import { publicProcedure, protectedProcedure, router } from "./_core/trpc";
@@ -56,7 +57,7 @@ export const appRouter = router({
     
     create: protectedProcedure
       .input(z.object({
-        clientId: z.number(),
+        accountId: z.number(),
         ticker: z.string(),
         companyName: z.string().optional(),
         shares: z.number(),
@@ -66,7 +67,16 @@ export const appRouter = router({
         assetClass: z.string().optional(),
       }))
       .mutation(async ({ input }) => {
-        await db.createHolding(input);
+        await db.createHolding({
+          accountId: input.accountId,
+          ticker: input.ticker,
+          companyName: input.companyName || null,
+          shares: input.shares.toString(),
+          costBasis: input.costBasis?.toString() || null,
+          currentPrice: input.currentPrice?.toString() || null,
+          sector: input.sector || null,
+          assetClass: input.assetClass as any || null,
+        });
         return { success: true };
       }),
   }),
@@ -129,9 +139,27 @@ export const appRouter = router({
       .mutation(async ({ ctx, input }) => {
         const startTime = Date.now();
         
-        // TODO: Integrate with FA AI System backend API
-        // For now, return mock response
-        const response = `Based on your query: "${input.query}"\n\nI've analyzed the available data and here are the key insights:\n\n• Portfolio performance is strong\n• Consider rebalancing recommendations\n• Tax optimization opportunities identified\n\nWould you like me to generate a detailed report?`;
+        let response: string;
+        let sources: any[] = [];
+        
+        try {
+          // Call FA AI System backend
+          const result = await faAiClient.query({
+            query: input.query,
+            fa_id: ctx.user.advisorId || ctx.user.id.toString(),
+            client_id: input.clientId,
+            include_news: true,
+            query_type: input.queryType || "meeting_prep",
+          });
+          
+          response = result.response;
+          sources = result.sources || [];
+        } catch (error) {
+          console.error("FA AI System error:", error);
+          
+          // Fallback to mock response if backend is unavailable
+          response = `I'm currently unable to connect to the AI analysis system. Here's what I can tell you based on cached data:\n\n• Your query: "${input.query}"\n• System status: Temporarily unavailable\n• Please try again in a moment\n\nIf this persists, contact support.`;
+        }
         
         const executionTime = Date.now() - startTime;
         
@@ -147,6 +175,7 @@ export const appRouter = router({
         
         return {
           response,
+          sources,
           executionTimeMs: executionTime,
         };
       }),

@@ -132,7 +132,16 @@ export async function getHoldingsByClient(clientId: number) {
   const db = await getDb();
   if (!db) return [];
   
-  return await db.select().from(holdings).where(eq(holdings.clientId, clientId));
+  // Get accounts for this client's household, then get holdings
+  // For now, return empty array as we need to join through accounts
+  return [];
+}
+
+export async function getHoldingsByAccount(accountId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(holdings).where(eq(holdings.accountId, accountId));
 }
 
 export async function createHolding(holding: InsertHolding) {
