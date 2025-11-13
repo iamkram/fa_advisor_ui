@@ -173,3 +173,26 @@
 
 ## Bug Fixes
 - [x] Fix nested anchor tag error in sidebar navigation
+
+## Configuration Updates
+- [x] Update LangSmith API key in FA AI System
+
+## Architecture Compliance Audit
+- [ ] Refactor to household-focused value proposition (actionable summaries for single household meetings)
+- [ ] Implement Supervisor -> Sub Research Agent -> Sub Validation Agent pattern
+- [x] Verify all tracing is in LangSmith (configured correctly)
+- [ ] Move all prompts to LangSmith Prompt Hub
+- [x] Confirm all agents built with LangGraph 1.0 (verified)
+- [ ] Refactor sub-agents to use single tool with dedicated validation agent
+
+## Phase 23: Mobile Experience Improvements
+- [x] Audit current mobile responsiveness
+- [x] Improve responsive navigation (mobile menu)
+- [x] Enhance touch targets (minimum 44x44px)
+- [x] Optimize layouts for mobile (Clients, Home, ClientDetail)
+- [x] Create mobile.css with touch optimizations
+- [x] Improve font sizes for mobile readability
+- [x] Add responsive spacing and padding
+- [x] Optimize button sizes for touch (44px minimum)
+- [ ] Test on various mobile devices
+- [ ] Create checkpoint with mobile improvements
