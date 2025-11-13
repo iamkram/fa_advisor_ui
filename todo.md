@@ -123,3 +123,31 @@
 - [x] Save meeting notes as interactions
 - [x] Real-time recording with timer
 - [x] Copy notes to clipboard functionalitytable
+
+## Phase 19: Dashboard Analytics
+- [x] Add portfolio performance charts (YTD returns)
+- [x] Create asset allocation pie chart
+- [x] Build AUM trends over time
+- [x] Add interactive drill-downs by advisor
+- [x] Show top performers and underperformers
+- [x] Client distribution by AUM
+- [x] Sector allocation bar chart
+- [x] KPI cards (Total AUM, Portfolio Return, Total Clients, Avg Portfolio Size)
+- [x] Analytics navigation link in sidebar
+
+## Phase 20: Client Portal
+- [x] Create separate client-facing routes (/portal)
+- [x] Read-only holdings view for households
+- [x] Performance summary for clients
+- [x] Document access for clients (mock data)
+- [x] Asset allocation pie chart
+- [x] Portfolio metrics (total value, gain/loss, return %)
+- [ ] Secure authentication for clients (future - requires separate auth system)
+
+## Phase 21: Compliance Alerts
+- [ ] Concentration risk detection (>10% single holding)
+- [ ] Risk profile suitability checks
+- [ ] Annual review requirement tracking
+- [ ] Automated alert generation
+- [ ] Compliance dashboard for advisors
+- [ ] Alert notification system

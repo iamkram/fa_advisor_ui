@@ -1,4 +1,4 @@
-import { Home, Users, TrendingUp, FileText, CheckSquare, FolderOpen, Sparkles } from "lucide-react";
+import { Home, Users, TrendingUp, FileText, CheckSquare, FolderOpen, Sparkles, BarChart3 } from "lucide-react";
 import { Link, useLocation } from "wouter";
 import { cn } from "@/lib/utils";
 
@@ -6,6 +6,7 @@ const navItems = [
   { icon: Home, label: "Home", path: "/" },
   { icon: Users, label: "Clients", path: "/clients" },
   { icon: TrendingUp, label: "Holdings", path: "/holdings" },
+  { icon: BarChart3, label: "Analytics", path: "/analytics" },
   { icon: FileText, label: "Reports", path: "/reports" },
   { icon: CheckSquare, label: "Tasks", path: "/tasks" },
   { icon: FolderOpen, label: "Documents", path: "/documents" },

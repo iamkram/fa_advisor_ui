@@ -261,6 +261,24 @@ export const appRouter = router({
         return await db.getNewsByTicker(input.ticker, input.limit);
       }),
   }),
+
+  // Analytics
+  analytics: router({
+    getOverview: protectedProcedure
+      .input(z.object({ timeframe: z.string().optional() }))
+      .query(async ({ input }) => {
+        const { getAnalyticsOverview } = await import("./services/analytics");
+        return await getAnalyticsOverview(input.timeframe || "ytd");
+      }),
+  }),
+
+  // Advisors
+  advisors: router({
+    list: protectedProcedure.query(async () => {
+      const { getAdvisorsList } = await import("./services/analytics");
+      return await getAdvisorsList();
+    }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;
