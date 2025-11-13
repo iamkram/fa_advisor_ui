@@ -170,3 +170,6 @@
 - [x] Manual trigger endpoint for testing
 - [x] "Run Scan Now" button in compliance dashboard
 - [x] Initialize job on server startup
+
+## Bug Fixes
+- [x] Fix nested anchor tag error in sidebar navigation
