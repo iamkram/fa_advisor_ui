@@ -145,9 +145,18 @@
 - [ ] Secure authentication for clients (future - requires separate auth system)
 
 ## Phase 21: Compliance Alerts
-- [ ] Concentration risk detection (>10% single holding)
-- [ ] Risk profile suitability checks
-- [ ] Annual review requirement tracking
-- [ ] Automated alert generation
-- [ ] Compliance dashboard for advisors
-- [ ] Alert notification system
+- [x] Create compliance monitoring service
+- [x] Concentration risk detection (>10% single holding)
+- [x] Risk profile suitability checks (aggressive/moderate/conservative)
+- [x] Annual review requirement tracking
+- [x] Automated alert generation with severity levels
+- [x] Large position monitoring
+- [x] Underperforming holdings detection
+- [x] Compliance dashboard UI with filtering
+- [x] Visual alert badges (critical/warning/info)
+- [x] Alert detail views with remediation suggestions
+- [x] Stats cards showing alert breakdown
+- [x] Search and filter functionality
+- [x] Color-coded severity indicators
+- [x] Affected holdings display
+- [ ] Export compliance reports (future enhancement)

@@ -279,6 +279,27 @@ export const appRouter = router({
       return await getAdvisorsList();
     }),
   }),
+
+  compliance: router({
+    scanAlerts: protectedProcedure
+      .input(z.object({ advisorId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        const { scanComplianceIssues } = await import("./services/compliance");
+        return await scanComplianceIssues(input?.advisorId);
+      }),
+    getStats: protectedProcedure
+      .input(z.object({ advisorId: z.number().optional() }).optional())
+      .query(async ({ input }) => {
+        const { getComplianceStats } = await import("./services/compliance");
+        return await getComplianceStats(input?.advisorId);
+      }),
+    getHouseholdAlerts: protectedProcedure
+      .input(z.object({ householdId: z.number() }))
+      .query(async ({ input }) => {
+        const { getHouseholdAlerts } = await import("./services/compliance");
+        return await getHouseholdAlerts(input.householdId);
+      }),
+  }),
 });
 
 export type AppRouter = typeof appRouter;

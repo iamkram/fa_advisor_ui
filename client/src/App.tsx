@@ -7,6 +7,7 @@ import { ThemeProvider } from "./contexts/ThemeContext";
 import Home from "./pages/Home";
 import Analytics from "./pages/Analytics";
 import ClientPortal from "./pages/portal/ClientPortal";
+import Compliance from "./pages/Compliance";
 import Clients from "./pages/Clients";
 import Holdings from "./pages/Holdings";
 import Reports from "./pages/Reports";
@@ -22,6 +23,7 @@ function Router() {
       <Route path={"/"} component={Home} />
       <Route path="/analytics" component={Analytics} />
       <Route path="/portal" component={ClientPortal} />
+      <Route path="/compliance" component={Compliance} />
       <Route path={"/clients"} component={Clients} />
       <Route path={"/client/:id"} component={ClientDetail} />
       <Route path={"/holdings"} component={Holdings} />
