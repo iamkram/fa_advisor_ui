@@ -1,6 +1,21 @@
-import { eq } from "drizzle-orm";
+import { eq, desc } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
-import { InsertUser, users } from "../drizzle/schema";
+import { 
+  InsertUser, 
+  users, 
+  clients, 
+  holdings, 
+  meetings, 
+  tasks, 
+  newsCache, 
+  aiQueries,
+  InsertClient,
+  InsertHolding,
+  InsertMeeting,
+  InsertTask,
+  InsertNewsCache,
+  InsertAiQuery,
+} from "../drizzle/schema";
 import { ENV } from './_core/env';
 
 let _db: ReturnType<typeof drizzle> | null = null;
@@ -35,7 +50,7 @@ export async function upsertUser(user: InsertUser): Promise<void> {
     };
     const updateSet: Record<string, unknown> = {};
 
-    const textFields = ["name", "email", "loginMethod"] as const;
+    const textFields = ["name", "email", "loginMethod", "advisorId", "firmName", "photoUrl"] as const;
     type TextField = (typeof textFields)[number];
 
     const assignNullable = (field: TextField) => {
@@ -89,4 +104,110 @@ export async function getUserByOpenId(openId: string) {
   return result.length > 0 ? result[0] : undefined;
 }
 
-// TODO: add feature queries here as your schema grows.
+// Client queries
+export async function getClientsByAdvisor(advisorId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(clients).where(eq(clients.advisorId, advisorId));
+}
+
+export async function getClientById(clientId: number) {
+  const db = await getDb();
+  if (!db) return undefined;
+  
+  const result = await db.select().from(clients).where(eq(clients.id, clientId)).limit(1);
+  return result.length > 0 ? result[0] : undefined;
+}
+
+export async function createClient(client: InsertClient) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(clients).values(client);
+}
+
+// Holdings queries
+export async function getHoldingsByClient(clientId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(holdings).where(eq(holdings.clientId, clientId));
+}
+
+export async function createHolding(holding: InsertHolding) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(holdings).values(holding);
+}
+
+// Meeting queries
+export async function getMeetingsByClient(clientId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(meetings)
+    .where(eq(meetings.clientId, clientId))
+    .orderBy(desc(meetings.meetingDate));
+}
+
+export async function createMeeting(meeting: InsertMeeting) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(meetings).values(meeting);
+}
+
+// Task queries
+export async function getTasksByAdvisor(advisorId: number) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(tasks)
+    .where(eq(tasks.advisorId, advisorId))
+    .orderBy(desc(tasks.createdAt));
+}
+
+export async function createTask(task: InsertTask) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(tasks).values(task);
+}
+
+// News cache queries
+export async function getNewsByTicker(ticker: string, limit: number = 10) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(newsCache)
+    .where(eq(newsCache.ticker, ticker))
+    .orderBy(desc(newsCache.publishedAt))
+    .limit(limit);
+}
+
+export async function cacheNews(news: InsertNewsCache) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(newsCache).values(news);
+}
+
+// AI query history
+export async function getAIQueryHistory(advisorId: number, limit: number = 20) {
+  const db = await getDb();
+  if (!db) return [];
+  
+  return await db.select().from(aiQueries)
+    .where(eq(aiQueries.advisorId, advisorId))
+    .orderBy(desc(aiQueries.createdAt))
+    .limit(limit);
+}
+
+export async function saveAIQuery(query: InsertAiQuery) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  await db.insert(aiQueries).values(query);
+}
