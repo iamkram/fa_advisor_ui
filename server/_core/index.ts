@@ -59,6 +59,11 @@ async function startServer() {
 
   server.listen(port, () => {
     console.log(`Server running on http://localhost:${port}/`);
+    
+    // Initialize scheduled jobs
+    import("../jobs/complianceScan").then(({ initComplianceJob }) => {
+      initComplianceJob();
+    }).catch(console.error);
   });
 }
 

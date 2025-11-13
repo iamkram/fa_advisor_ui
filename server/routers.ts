@@ -299,6 +299,12 @@ export const appRouter = router({
         const { getHouseholdAlerts } = await import("./services/compliance");
         return await getHouseholdAlerts(input.householdId);
       }),
+    triggerScan: protectedProcedure
+      .mutation(async () => {
+        const { triggerComplianceScan } = await import("./jobs/complianceScan");
+        await triggerComplianceScan();
+        return { success: true, message: "Compliance scan triggered successfully" };
+      }),
   }),
 });
 

@@ -160,3 +160,13 @@
 - [x] Color-coded severity indicators
 - [x] Affected holdings display
 - [ ] Export compliance reports (future enhancement)
+
+## Phase 22: Scheduled Compliance Scanning
+- [x] Install node-cron for scheduling
+- [x] Create nightly compliance scan job (2 AM)
+- [x] Email notification service for critical alerts
+- [x] Alert summary email template
+- [x] Track alert history to detect new alerts
+- [x] Manual trigger endpoint for testing
+- [x] "Run Scan Now" button in compliance dashboard
+- [x] Initialize job on server startup

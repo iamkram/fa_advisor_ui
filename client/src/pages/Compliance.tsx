@@ -70,6 +70,7 @@ export default function Compliance() {
 
   const { data: alerts, isLoading } = trpc.compliance.scanAlerts.useQuery();
   const { data: stats } = trpc.compliance.getStats.useQuery();
+  const triggerScan = trpc.compliance.triggerScan.useMutation();
 
   // Filter alerts
   const filteredAlerts = alerts?.filter(alert => {
@@ -88,11 +89,20 @@ export default function Compliance() {
     <DashboardLayout>
       <div className="space-y-6">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold">Compliance Alerts</h1>
-          <p className="text-muted-foreground mt-1">
-            Automated risk monitoring and compliance tracking
-          </p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold">Compliance Alerts</h1>
+            <p className="text-muted-foreground mt-1">
+              Automated risk monitoring and compliance tracking
+            </p>
+          </div>
+          <Button
+            onClick={() => triggerScan.mutate()}
+            disabled={triggerScan.isPending}
+            variant="outline"
+          >
+            {triggerScan.isPending ? "Scanning..." : "Run Scan Now"}
+          </Button>
         </div>
 
         {/* Stats Cards */}
