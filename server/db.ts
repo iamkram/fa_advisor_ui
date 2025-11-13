@@ -14,7 +14,7 @@ import {
   InsertMeeting,
   InsertTask,
   InsertNewsCache,
-  InsertAiQuery,
+  InsertAIQuery,
 } from "../drizzle/schema";
 import { ENV } from './_core/env';
 
@@ -214,7 +214,7 @@ export async function getAIQueryHistory(advisorId: number, limit: number = 20) {
     .limit(limit);
 }
 
-export async function saveAIQuery(query: InsertAiQuery) {
+export async function saveAIQuery(query: InsertAIQuery) {
   const db = await getDb();
   if (!db) throw new Error("Database not available");
   

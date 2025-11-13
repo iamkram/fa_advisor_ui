@@ -161,6 +161,6 @@ export class FAIClient {
 
 // Singleton instance
 export const faAiClient = new FAIClient(
-  process.env.FA_AI_SYSTEM_URL || "http://localhost:8000",
+  process.env.FA_AI_SYSTEM_URL || "https://8000-iobtysnaf9hp9h92n3sxp-1d223801.manusvm.computer",
   parseInt(process.env.FA_AI_SYSTEM_TIMEOUT || "60000")
 );

@@ -268,7 +268,42 @@ export const aiQueries = mysqlTable("aiQueries", {
 }));
 
 export type AiQuery = typeof aiQueries.$inferSelect;
-export type InsertAiQuery = typeof aiQueries.$inferInsert;
+export type InsertAIQuery = typeof aiQueries.$inferInsert;
+
+/**
+ * Interactions - Salesforce-style CRM interactions
+ * Tracks all touchpoints between advisors and households
+ */
+export const interactions = mysqlTable("interactions", {
+  id: int("id").autoincrement().primaryKey(),
+  advisorId: int("advisorId").notNull().references(() => users.id),
+  householdId: int("householdId").references(() => households.id),
+  
+  // Interaction details
+  interactionType: mysqlEnum("interactionType", ["email", "call", "meeting", "note", "task"]).notNull(),
+  subject: varchar("subject", { length: 500 }),
+  description: text("description"),
+  
+  // Metadata
+  interactionDate: timestamp("interactionDate").notNull(),
+  duration: int("duration"), // Duration in minutes (for calls/meetings)
+  outcome: varchar("outcome", { length: 255 }), // e.g., "Scheduled follow-up", "Closed deal"
+  nextSteps: text("nextSteps"),
+  
+  // Salesforce integration
+  salesforceId: varchar("salesforceId", { length: 64 }),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+  updatedAt: timestamp("updatedAt").defaultNow().onUpdateNow().notNull(),
+}, (table) => ({
+  advisorIdx: index("interaction_advisor_idx").on(table.advisorId),
+  householdIdx: index("interaction_household_idx").on(table.householdId),
+  dateIdx: index("interaction_date_idx").on(table.interactionDate),
+  typeIdx: index("interaction_type_idx").on(table.interactionType),
+}));
+
+export type Interaction = typeof interactions.$inferSelect;
+export type InsertInteraction = typeof interactions.$inferInsert;
 
 /**
  * S&P 500 reference data
