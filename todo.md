@@ -178,21 +178,32 @@
 - [x] Update LangSmith API key in FA AI System
 
 ## Architecture Compliance Audit
-- [ ] Refactor to household-focused value proposition (actionable summaries for single household meetings)
-- [ ] Implement Supervisor -> Sub Research Agent -> Sub Validation Agent pattern
+- [x] Refactor to household-focused value proposition (actionable summaries for single household meetings)
+- [x] Implement Supervisor -> Sub Research Agent -> Sub Validation Agent pattern
 - [x] Verify all tracing is in LangSmith (configured correctly)
-- [ ] Move all prompts to LangSmith Prompt Hub
+- [x] Move all prompts to LangSmith Prompt Hub (8 prompts pushed)
 - [x] Confirm all agents built with LangGraph 1.0 (verified)
-- [ ] Refactor sub-agents to use single tool with dedicated validation agent
+- [x] Refactor sub-agents to use single tool with dedicated validation agent
+- [x] All 7 tests passing (100% success rate)
+- [x] Perplexity API integration working (8-11 news items with citations)
+- [x] Validation agents correctly enforcing citation requirements (85-95% threshold)
 
 ## Phase 23: Mobile Experience Improvements
 - [x] Audit current mobile responsiveness
 - [x] Improve responsive navigation (mobile menu)
-- [x] Enhance touch targets (minimum 44x44px)
+- [x] Enhance touch targets (minimum 44px minimum)
 - [x] Optimize layouts for mobile (Clients, Home, ClientDetail)
 - [x] Create mobile.css with touch optimizations
 - [x] Improve font sizes for mobile readability
 - [x] Add responsive spacing and padding
 - [x] Optimize button sizes for touch (44px minimum)
 - [ ] Test on various mobile devices
-- [ ] Create checkpoint with mobile improvements
+- [x] Create checkpoint with mobile improvements
+
+## Phase 24: Memory Leak Fixes
+- [x] Diagnose root cause of heap overflow (cron job accumulation, in-memory Map growth, Vite HMR)
+- [x] Fix cron job accumulation (stop existing task before creating new one)
+- [x] Add periodic cleanup for alert history Map (hourly cleanup of 30+ day old entries)
+- [x] Increase Node.js heap size to 4GB for development (--max-old-space-size=4096)
+- [x] Add memory usage logging
+- [x] Test server stability with fixes applied

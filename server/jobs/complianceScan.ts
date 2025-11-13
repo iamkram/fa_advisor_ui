@@ -19,7 +19,10 @@ interface AlertHistory {
 }
 
 // In-memory store for alert history (in production, use database)
-const alertHistory = new Map<string, AlertHistory>();
+export const alertHistory = new Map<string, AlertHistory>();
+
+// Store cron task reference for cleanup
+let cronTask: ReturnType<typeof cron.schedule> | null = null;
 
 /**
  * Send email notification to advisor about critical alerts
@@ -188,15 +191,26 @@ export async function runComplianceScan() {
  * Runs every day at 2:00 AM
  */
 export function initComplianceJob() {
+  // Stop existing cron job if it exists (prevents accumulation during hot reload)
+  if (cronTask) {
+    cronTask.stop();
+    console.log("[Compliance Job] Stopped existing cron task");
+  }
+
   // Schedule: Run at 2:00 AM every day
   // Cron format: second minute hour day month dayOfWeek
   const schedule = "0 0 2 * * *"; // 2:00 AM daily
 
-  cron.schedule(schedule, async () => {
+  cronTask = cron.schedule(schedule, async () => {
     await runComplianceScan();
   });
 
   console.log("[Compliance Job] Scheduled to run daily at 2:00 AM");
+  
+  // Initialize cleanup job to prevent memory leaks
+  import("./cleanupAlertHistory").then(({ initCleanupJob }) => {
+    initCleanupJob(alertHistory);
+  }).catch(console.error);
 
   // Optional: Run immediately on startup for testing
   // Uncomment the line below to run on server start
