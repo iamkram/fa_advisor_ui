@@ -142,7 +142,9 @@ export default function Home() {
                   </div>
                 );
               })}
-              <Button variant="outline" className="w-full">View All Insights</Button>
+              <Link href="/ai-insights">
+                <Button variant="outline" className="w-full">View All Insights</Button>
+              </Link>
             </CardContent>
           </Card>
 
@@ -174,7 +176,9 @@ export default function Home() {
                   </Badge>
                 </div>
               ))}
-              <Button variant="outline" className="w-full mt-4">View All Tasks</Button>
+              <Link href="/tasks">
+                <Button variant="outline" className="w-full mt-4">View All Tasks</Button>
+              </Link>
             </CardContent>
           </Card>
         </div>

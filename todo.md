@@ -245,3 +245,9 @@
 - [x] Improve page header with navigation context
 - [x] Test navigation flow
 - [x] Commit to GitHub
+
+## Phase 30: Fix Homepage Links
+- [x] Fix "View All Insights" button to link to AI Insights page
+- [x] Fix "View All Tasks" button to link to Tasks page
+- [x] Test all navigation links
+- [ ] Save checkpoint and commit to GitHub
