@@ -1,0 +1,40 @@
+{
+  "query": "SELECT h.id, h.householdId, h.talkingPoints, h.portfolioValidated, h.portfolioAccuracy, h.newsValidated, h.newsAccuracy, h.createdAt FROM householdInsights h WHERE h.batchRunId = 30001 ORDER BY h.householdId LIMIT 3",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT h.id, h.householdId, h.talkingPoints, h.portfolioValidated, h.portfolioAccuracy, h.newsValidated, h.newsAccuracy, h.createdAt FROM householdInsights h WHERE h.batchRunId = 30001 ORDER BY h.householdId LIMIT 3",
+  "rows": [
+    {
+      "id": "30001",
+      "householdId": "1",
+      "talkingPoints": "[\"1. Discuss the client's investment objectives and risk tolerance to ensure the portfolio is aligned with their goals.\", \"2. Recommend diversifying the portfolio across additional sectors to reduce the concentration risk.\", \"3. Consider rebalancing the portfolio to bring the top holdings to a more manageable level, potentially below 2% each.\", \"4. Evaluate the appropriateness of the current asset allocation given the client's conservative risk profile.\", \"5. Highlight the strong performance of Goldman Sachs and Lam Research, and discuss the implications of Oracle's cloud transformation.\", \"6. Evaluate the need to rebalance the financial sector exposure, pending any new developments on Wells Fargo and Truist Financial.\", \"7. Acknowledge the lack of recent updates on Wells Fargo and Truist Financial, but note their importance in the financial sector.\"]",
+      "portfolioValidated": "0",
+      "portfolioAccuracy": "0.0000",
+      "newsValidated": "0",
+      "newsAccuracy": "0.0000",
+      "createdAt": "2025-11-14 09:57:51"
+    },
+    {
+      "id": "30002",
+      "householdId": "2",
+      "talkingPoints": "[\"1. Discuss the client's risk tolerance and investment objectives to ensure the portfolio aligns with their goals.\", \"2. Recommend diversifying the portfolio across a broader range of sectors to reduce concentration risk.\", \"3. Consider rebalancing the portfolio to achieve a more balanced sector allocation.\", \"4. Evaluate the appropriateness of the top holdings and their fit with the client's risk profile and investment objectives.\", \"5. Highlight the strong earnings performance and growth drivers for JPMorgan Chase, Adobe, and Amazon.\", \"6. Discuss JPMorgan Chase's digital transformation and sustainability initiatives as potential competitive advantages.\", \"7. Explore opportunities in the technology and financial sectors, which are leading the market, while remaining vigilant of macroeconomic risks and cost pressures.\"]",
+      "portfolioValidated": "0",
+      "portfolioAccuracy": "0.0000",
+      "newsValidated": "0",
+      "newsAccuracy": "0.0000",
+      "createdAt": "2025-11-14 09:58:21"
+    },
+    {
+      "id": "30003",
+      "householdId": "3",
+      "talkingPoints": "[\"1. Discuss the client's investment objectives and risk tolerance to ensure the portfolio aligns with their goals.\", \"2. Recommend diversifying the portfolio across additional sectors to reduce concentration risk and improve overall risk-adjusted returns.\", \"3. Consider rebalancing the portfolio to bring the sector allocations more in line with the client's desired asset allocation.\", \"4. Evaluate the top holdings, particularly UnitedHealth Group (UNH), and determine if any positions should be reduced or replaced to better manage risk.\", \"5. Highlight UnitedHealth Group's solid financial performance, attractive valuation, and growth potential, which make it a potentially attractive holding in the current market environment.\", \"6. Mention the potential for maintaining or adding to the UNH position to provide stability and upside to the overall portfolio.\", \"7. Emphasize the need for further research on the other top holdings (PEP, TXN, MS, C) to assess their current status and outlook.\"]",
+      "portfolioValidated": "0",
+      "portfolioAccuracy": "0.0000",
+      "newsValidated": "0",
+      "newsAccuracy": "0.0000",
+      "createdAt": "2025-11-14 09:58:42"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\thouseholdId\ttalkingPoints\tportfolioValidated\tportfolioAccuracy\tnewsValidated\tnewsAccuracy\tcreatedAt\n30001\t1\t[\"1. Discuss the client's investment objectives and risk tolerance to ensure the portfolio is aligned with their goals.\", \"2. Recommend diversifying the portfolio across additional sectors to reduce the concentration risk.\", \"3. Consider rebalancing the portfolio to bring the top holdings to a more manageable level, potentially below 2% each.\", \"4. Evaluate the appropriateness of the current asset allocation given the client's conservative risk profile.\", \"5. Highlight the strong performance of Goldman Sachs and Lam Research, and discuss the implications of Oracle's cloud transformation.\", \"6. Evaluate the need to rebalance the financial sector exposure, pending any new developments on Wells Fargo and Truist Financial.\", \"7. Acknowledge the lack of recent updates on Wells Fargo and Truist Financial, but note their importance in the financial sector.\"]\t0\t0.0000\t0\t0.0000\t2025-11-14 09:57:51\n30002\t2\t[\"1. Discuss the client's risk tolerance and investment objectives to ensure the portfolio aligns with their goals.\", \"2. Recommend diversifying the portfolio across a broader range of sectors to reduce concentration risk.\", \"3. Consider rebalancing the portfolio to achieve a more balanced sector allocation.\", \"4. Evaluate the appropriateness of the top holdings and their fit with the client's risk profile and investment objectives.\", \"5. Highlight the strong earnings performance and growth drivers for JPMorgan Chase, Adobe, and Amazon.\", \"6. Discuss JPMorgan Chase's digital transformation and sustainability initiatives as potential competitive advantages.\", \"7. Explore opportunities in the technology and financial sectors, which are leading the market, while remaining vigilant of macroeconomic risks and cost pressures.\"]\t0\t0.0000\t0\t0.0000\t2025-11-14 09:58:21\n30003\t3\t[\"1. Discuss the client's investment objectives and risk tolerance to ensure the portfolio aligns with their goals.\", \"2. Recommend diversifying the portfolio across additional sectors to reduce concentration risk and improve overall risk-adjusted returns.\", \"3. Consider rebalancing the portfolio to bring the sector allocations more in line with the client's desired asset allocation.\", \"4. Evaluate the top holdings, particularly UnitedHealth Group (UNH), and determine if any positions should be reduced or replaced to better manage risk.\", \"5. Highlight UnitedHealth Group's solid financial performance, attractive valuation, and growth potential, which make it a potentially attractive holding in the current market environment.\", \"6. Mention the potential for maintaining or adding to the UNH position to provide stability and upside to the overall portfolio.\", \"7. Emphasize the need for further research on the other top holdings (PEP, TXN, MS, C) to assess their current status and outlook.\"]\t0\t0.0000\t0\t0.0000\t2025-11-14 09:58:42\n",
+  "stderr": "",
+  "execution_time_ms": 438
+}
