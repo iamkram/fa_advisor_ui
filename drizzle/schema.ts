@@ -1,4 +1,4 @@
-import { int, mysqlEnum, mysqlTable, text, timestamp, varchar, decimal, index, unique } from "drizzle-orm/mysql-core";
+import { boolean, decimal, int, mysqlEnum, mysqlTable, text, timestamp, varchar, index, unique } from "drizzle-orm/mysql-core";
 
 /**
  * Core user table backing auth flow.
@@ -325,3 +325,76 @@ export const sp500Companies = mysqlTable("sp500Companies", {
 
 export type SP500Company = typeof sp500Companies.$inferSelect;
 export type InsertSP500Company = typeof sp500Companies.$inferInsert;
+
+/**
+ * Batch Runs - Nightly AI analysis batch job metadata
+ * Tracks when batches run and their overall success
+ */
+export const batchRuns = mysqlTable("batchRuns", {
+  id: int("id").autoincrement().primaryKey(),
+  
+  // Batch metadata
+  startedAt: timestamp("startedAt").notNull(),
+  completedAt: timestamp("completedAt"),
+  status: mysqlEnum("status", ["running", "completed", "failed"]).default("running").notNull(),
+  
+  // Statistics
+  totalHouseholds: int("totalHouseholds").notNull(),
+  successfulHouseholds: int("successfulHouseholds").default(0),
+  failedHouseholds: int("failedHouseholds").default(0),
+  
+  // Performance metrics
+  avgProcessingTime: decimal("avgProcessingTime", { precision: 10, scale: 2 }), // seconds
+  totalDuration: decimal("totalDuration", { precision: 10, scale: 2 }), // seconds
+  
+  // Error tracking
+  errorLog: text("errorLog"), // JSON array of errors
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  startedAtIdx: index("batch_started_idx").on(table.startedAt),
+  statusIdx: index("batch_status_idx").on(table.status),
+}));
+
+export type BatchRun = typeof batchRuns.$inferSelect;
+export type InsertBatchRun = typeof batchRuns.$inferInsert;
+
+/**
+ * Household Insights - AI-generated insights from nightly batch
+ * One record per household per batch run
+ */
+export const householdInsights = mysqlTable("householdInsights", {
+  id: int("id").autoincrement().primaryKey(),
+  batchRunId: int("batchRunId").notNull().references(() => batchRuns.id),
+  householdId: int("householdId").notNull().references(() => households.id),
+  
+  // Research summaries
+  portfolioSummary: text("portfolioSummary"), // Portfolio analysis from Claude
+  newsSummary: text("newsSummary"), // News research from Perplexity
+  finalSummary: text("finalSummary"), // Synthesized summary
+  
+  // Talking points (JSON array of strings)
+  talkingPoints: text("talkingPoints").notNull(), // JSON array
+  
+  // Validation metrics
+  portfolioValidated: boolean("portfolioValidated").default(false),
+  portfolioAccuracy: decimal("portfolioAccuracy", { precision: 5, scale: 4 }), // 0.0000 to 1.0000
+  newsValidated: boolean("newsValidated").default(false),
+  newsAccuracy: decimal("newsAccuracy", { precision: 5, scale: 4 }),
+  
+  // Processing metadata
+  processingTime: decimal("processingTime", { precision: 10, scale: 2 }), // seconds
+  status: mysqlEnum("status", ["completed", "failed"]).default("completed").notNull(),
+  errorMessage: text("errorMessage"),
+  
+  createdAt: timestamp("createdAt").defaultNow().notNull(),
+}, (table) => ({
+  batchRunIdIdx: index("insight_batch_idx").on(table.batchRunId),
+  householdIdIdx: index("insight_household_idx").on(table.householdId),
+  createdAtIdx: index("insight_created_idx").on(table.createdAt),
+  // Composite index for fetching latest insight per household
+  householdCreatedIdx: index("insight_household_created_idx").on(table.householdId, table.createdAt),
+}));
+
+export type HouseholdInsight = typeof householdInsights.$inferSelect;
+export type InsertHouseholdInsight = typeof householdInsights.$inferInsert;

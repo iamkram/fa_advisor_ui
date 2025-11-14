@@ -35,6 +35,7 @@ export default function ClientDetail() {
   const { data: interactions = [] } = trpc.interactions.getByHousehold.useQuery({ householdId });
   const { data: holdings = [] } = trpc.holdings.getByClient.useQuery({ clientId: householdId });
   const { data: meetings = [] } = trpc.meetings.getByClient.useQuery({ clientId: householdId });
+  const { data: insight, isLoading: insightLoading } = trpc.insights.getLatestByHousehold.useQuery({ householdId });
 
   // Transform database data to match component expectations
   const client = household ? {
@@ -86,12 +87,15 @@ export default function ClientDetail() {
     { date: "2025-10-28", type: "Dividend", ticker: "MSFT", amount: 450 },
   ];
 
-  const talkingPoints = [
-    "Portfolio performance +12.3% YTD, outperforming benchmark by 3.1%",
-    "Tech sector allocation at 56% - consider rebalancing to target 50%",
-    "Tax-loss harvesting opportunity with TSLA position (-15% unrealized loss)",
-    "Q4 RMD requirement: $45,000 due by December 31st",
-  ];
+  // Use AI-generated talking points from database, fallback to mock if not available
+  const talkingPoints = insight?.talkingPoints && insight.talkingPoints.length > 0 
+    ? insight.talkingPoints
+    : [
+        "Portfolio performance +12.3% YTD, outperforming benchmark by 3.1%",
+        "Tech sector allocation at 56% - consider rebalancing to target 50%",
+        "Tax-loss harvesting opportunity with TSLA position (-15% unrealized loss)",
+        "Q4 RMD requirement: $45,000 due by December 31st",
+      ];
 
   const riskFlags = [
     { severity: "medium", message: "Portfolio overweight in technology sector" },
@@ -295,12 +299,40 @@ export default function ClientDetail() {
                 </div>
               </CardHeader>
               <CardContent className="pt-6 space-y-3">
-                {talkingPoints.map((point, idx) => (
-                  <div key={idx} className="flex items-start gap-2">
-                    <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
-                    <p className="text-sm">{point}</p>
+                {insightLoading ? (
+                  <div className="flex items-center justify-center py-8">
+                    <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-primary" />
                   </div>
-                ))}
+                ) : talkingPoints.length > 0 ? (
+                  talkingPoints.map((point, idx) => (
+                    <div key={idx} className="flex items-start gap-2">
+                      <CheckCircle2 className="w-5 h-5 text-primary mt-0.5 flex-shrink-0" />
+                      <p className="text-sm">{point}</p>
+                    </div>
+                  ))
+                ) : (
+                  <div className="text-center py-8 text-muted-foreground">
+                    <p className="text-sm">No AI insights available yet.</p>
+                    <p className="text-xs mt-1">Insights are generated nightly for upcoming meetings.</p>
+                  </div>
+                )}
+                
+                {/* Show insight metadata if available */}
+                {insight && (
+                  <div className="pt-4 border-t mt-4">
+                    <div className="flex items-center justify-between text-xs text-muted-foreground">
+                      <div className="flex items-center gap-4">
+                        <span>Generated: {new Date(insight.createdAt).toLocaleDateString()}</span>
+                        {insight.portfolioValidated && (
+                          <span className="text-green-600">✓ Validated ({(insight.portfolioAccuracy! * 100).toFixed(0)}% accuracy)</span>
+                        )}
+                      </div>
+                      <span className="text-xs text-muted-foreground">
+                        Processing time: {insight.processingTime?.toFixed(1)}s
+                      </span>
+                    </div>
+                  </div>
+                )}
               </CardContent>
             </Card>
 

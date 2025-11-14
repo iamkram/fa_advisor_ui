@@ -1,0 +1,9 @@
+{
+  "query": "CREATE TABLE IF NOT EXISTS batchRuns (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  startedAt TIMESTAMP NOT NULL,\n  completedAt TIMESTAMP NULL,\n  status ENUM('running', 'completed', 'failed') NOT NULL DEFAULT 'running',\n  totalHouseholds INT NOT NULL,\n  successfulHouseholds INT DEFAULT 0,\n  failedHouseholds INT DEFAULT 0,\n  avgProcessingTime DECIMAL(10, 2) NULL,\n  totalDuration DECIMAL(10, 2) NULL,\n  errorLog TEXT NULL,\n  createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  INDEX batch_started_idx (startedAt),\n  INDEX batch_status_idx (status)\n)",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute CREATE TABLE IF NOT EXISTS batchRuns (\n  id INT AUTO_INCREMENT PRIMARY KEY,\n  startedAt TIMESTAMP NOT NULL,\n  completedAt TIMESTAMP NULL,\n  status ENUM('running', 'completed', 'failed') NOT NULL DEFAULT 'running',\n  totalHouseholds INT NOT NULL,\n  successfulHouseholds INT DEFAULT 0,\n  failedHouseholds INT DEFAULT 0,\n  avgProcessingTime DECIMAL(10, 2) NULL,\n  totalDuration DECIMAL(10, 2) NULL,\n  errorLog TEXT NULL,\n  createdAt TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,\n  INDEX batch_started_idx (startedAt),\n  INDEX batch_status_idx (status)\n)",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 565
+}

@@ -1,0 +1,28 @@
+{
+  "query": "SELECT * FROM holdings LIMIT 1",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT * FROM holdings LIMIT 1",
+  "rows": [
+    {
+      "id": "1",
+      "accountId": "1",
+      "ticker": "AMAT",
+      "companyName": "Applied Materials Inc.",
+      "cusip": "NULL",
+      "shares": "674.7107",
+      "costBasis": "184706.97",
+      "currentPrice": "301.13",
+      "currentValue": "203175.63",
+      "assetClass": "equity",
+      "sector": "Technology",
+      "unrealizedGainLoss": "18468.67",
+      "unrealizedGainLossPercent": "9.9989",
+      "purchaseDate": "2023-01-26 16:58:18",
+      "createdAt": "2025-11-13 14:05:36",
+      "updatedAt": "2025-11-13 14:05:36"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\taccountId\tticker\tcompanyName\tcusip\tshares\tcostBasis\tcurrentPrice\tcurrentValue\tassetClass\tsector\tunrealizedGainLoss\tunrealizedGainLossPercent\tpurchaseDate\tcreatedAt\tupdatedAt\n1\t1\tAMAT\tApplied Materials Inc.\tNULL\t674.7107\t184706.97\t301.13\t203175.63\tequity\tTechnology\t18468.67\t9.9989\t2023-01-26 16:58:18\t2025-11-13 14:05:36\t2025-11-13 14:05:36\n",
+  "stderr": "",
+  "execution_time_ms": 388
+}

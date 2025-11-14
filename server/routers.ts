@@ -286,6 +286,46 @@ export const appRouter = router({
     }),
   }),
 
+  // Batch Insights
+  insights: router({ 
+    getLatestByHousehold: protectedProcedure
+      .input(z.object({ householdId: z.number() }))
+      .query(async ({ input }) => {
+        const { getLatestInsightByHousehold } = await import("./db-insights");
+        return await getLatestInsightByHousehold(input.householdId);
+      }),
+    
+    getByBatchRun: protectedProcedure
+      .input(z.object({ batchRunId: z.number() }))
+      .query(async ({ input }) => {
+        const { getInsightsByBatchRun } = await import("./db-insights");
+        return await getInsightsByBatchRun(input.batchRunId);
+      }),
+    
+    getLatestBatchRun: protectedProcedure
+      .query(async () => {
+        const { getLatestBatchRun } = await import("./db-insights");
+        return await getLatestBatchRun();
+      }),
+    
+    getBatchRunById: protectedProcedure
+      .input(z.object({ batchRunId: z.number() }))
+      .query(async ({ input }) => {
+        const { getBatchRunById } = await import("./db-insights");
+        return await getBatchRunById(input.batchRunId);
+      }),
+    
+    getAllBatchRuns: protectedProcedure
+      .input(z.object({ 
+        limit: z.number().optional(),
+        offset: z.number().optional(),
+      }))
+      .query(async ({ input }) => {
+        const { getAllBatchRuns } = await import("./db-insights");
+        return await getAllBatchRuns(input.limit, input.offset);
+      }),
+  }),
+
   compliance: router({
     scanAlerts: protectedProcedure
       .input(z.object({ advisorId: z.number().optional() }).optional())
