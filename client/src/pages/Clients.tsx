@@ -87,7 +87,7 @@ export default function Clients() {
                     <div className="flex items-center gap-3 mb-2">
                       <div className="w-11 h-11 md:w-12 md:h-12 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                         <span className="text-primary font-semibold text-sm md:text-base">
-                          {client.name.split(" ").map(n => n[0]).join("")}
+                          {client.name.split(" ").map((n: string) => n[0]).join("")}
                         </span>
                       </div>
                       <div className="min-w-0">

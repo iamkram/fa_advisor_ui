@@ -33,20 +33,50 @@ export default function ClientDetail() {
   // Fetch interactions
   const { data: interactions = [] } = trpc.interactions.getByHousehold.useQuery({ householdId });
 
-  // Mock client data
-  const client = {
-    id: parseInt(id || "1"),
-    name: "John Smith",
-    email: "john.smith@email.com",
-    phone: "(555) 123-4567",
-    netWorth: 3500000,
-    portfolioValue: 1250000,
-    performance1d: 0.8,
-    performanceYtd: 12.3,
-    nextMeeting: "Today, 10:00 AM",
-    retirementDate: "2035-06-15",
-    riskTolerance: "Moderate",
+  // Mock client data - different data for each client ID
+  const clientData: Record<number, any> = {
+    1: {
+      id: 1,
+      name: "John Smith",
+      email: "john.smith@email.com",
+      phone: "(555) 123-4567",
+      netWorth: 3500000,
+      portfolioValue: 1250000,
+      performance1d: 0.8,
+      performanceYtd: 12.3,
+      nextMeeting: "Today, 10:00 AM",
+      retirementDate: "2035-06-15",
+      riskTolerance: "Moderate",
+    },
+    2: {
+      id: 2,
+      name: "Sarah Johnson",
+      email: "sarah.johnson@email.com",
+      phone: "(555) 234-5678",
+      netWorth: 2800000,
+      portfolioValue: 850000,
+      performance1d: 1.2,
+      performanceYtd: 8.7,
+      nextMeeting: "Today, 2:00 PM",
+      retirementDate: "2040-12-31",
+      riskTolerance: "Conservative",
+    },
+    3: {
+      id: 3,
+      name: "Michael Chen",
+      email: "m.chen@email.com",
+      phone: "(555) 345-6789",
+      netWorth: 4200000,
+      portfolioValue: 2100000,
+      performance1d: -0.5,
+      performanceYtd: -2.1,
+      nextMeeting: "Tomorrow, 11:00 AM",
+      retirementDate: "2038-08-15",
+      riskTolerance: "Aggressive",
+    },
   };
+
+  const client = clientData[householdId] || clientData[1];
 
   const holdings = [
     { ticker: "AAPL", name: "Apple Inc.", value: 250000, allocation: 20, change: 2.3 },
@@ -107,7 +137,7 @@ export default function ClientDetail() {
               <div className="flex items-start gap-3 md:gap-4">
                 <div className="w-14 h-14 md:w-16 md:h-16 rounded-full bg-primary/10 flex items-center justify-center shrink-0">
                   <span className="text-primary font-bold text-lg md:text-xl">
-                    {client.name.split(" ").map(n => n[0]).join("")}
+                    {client.name.split(" ").map((n: string) => n[0]).join("")}
                   </span>
                 </div>
                 <div className="flex-1 min-w-0">
