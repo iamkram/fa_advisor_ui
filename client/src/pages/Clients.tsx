@@ -5,38 +5,23 @@ import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { Search, Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 
 export default function Clients() {
-  // Mock client data
-  const clients = [
-    {
-      id: 1,
-      name: "John Smith",
-      email: "john.smith@email.com",
-      portfolioValue: 1250000,
-      performance: 12.3,
-      nextMeeting: "Today, 10:00 AM",
-      riskTolerance: "Moderate",
-    },
-    {
-      id: 2,
-      name: "Sarah Johnson",
-      email: "sarah.j@email.com",
-      portfolioValue: 850000,
-      performance: 8.7,
-      nextMeeting: "Today, 2:00 PM",
-      riskTolerance: "Conservative",
-    },
-    {
-      id: 3,
-      name: "Michael Chen",
-      email: "m.chen@email.com",
-      portfolioValue: 2100000,
-      performance: -2.1,
-      nextMeeting: "Tomorrow, 11:00 AM",
-      riskTolerance: "Aggressive",
-    },
-  ];
+  // Fetch clients from database
+  const { data: clientsData = [], isLoading } = trpc.clients.list.useQuery();
+  
+  const clients = clientsData.map((household: any) => ({
+    id: household.id,
+    name: household.householdName || household.primaryContactName || "Unknown",
+    email: household.email || "No email",
+    portfolioValue: parseFloat(household.totalNetWorth || "0"),
+    performance: 0, // Will be calculated from accounts
+    nextMeeting: "No upcoming meeting",
+    riskTolerance: household.riskTolerance ? 
+      household.riskTolerance.charAt(0).toUpperCase() + household.riskTolerance.slice(1) : 
+      "Moderate",
+  }));
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {

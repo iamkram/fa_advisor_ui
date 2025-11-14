@@ -30,61 +30,55 @@ export default function ClientDetail() {
   const [aiDrawerOpen, setAiDrawerOpen] = useState(false);
   const householdId = parseInt(id || "1");
   
-  // Fetch interactions
+  // Fetch household data from database
+  const { data: household, isLoading: householdLoading } = trpc.clients.getById.useQuery({ id: householdId });
   const { data: interactions = [] } = trpc.interactions.getByHousehold.useQuery({ householdId });
+  const { data: holdings = [] } = trpc.holdings.getByClient.useQuery({ clientId: householdId });
+  const { data: meetings = [] } = trpc.meetings.getByClient.useQuery({ clientId: householdId });
 
-  // Mock client data - different data for each client ID
-  const clientData: Record<number, any> = {
-    1: {
-      id: 1,
-      name: "John Smith",
-      email: "john.smith@email.com",
-      phone: "(555) 123-4567",
-      netWorth: 3500000,
-      portfolioValue: 1250000,
-      performance1d: 0.8,
-      performanceYtd: 12.3,
-      nextMeeting: "Today, 10:00 AM",
-      retirementDate: "2035-06-15",
-      riskTolerance: "Moderate",
-    },
-    2: {
-      id: 2,
-      name: "Sarah Johnson",
-      email: "sarah.johnson@email.com",
-      phone: "(555) 234-5678",
-      netWorth: 2800000,
-      portfolioValue: 850000,
-      performance1d: 1.2,
-      performanceYtd: 8.7,
-      nextMeeting: "Today, 2:00 PM",
-      retirementDate: "2040-12-31",
-      riskTolerance: "Conservative",
-    },
-    3: {
-      id: 3,
-      name: "Michael Chen",
-      email: "m.chen@email.com",
-      phone: "(555) 345-6789",
-      netWorth: 4200000,
-      portfolioValue: 2100000,
-      performance1d: -0.5,
-      performanceYtd: -2.1,
-      nextMeeting: "Tomorrow, 11:00 AM",
-      retirementDate: "2038-08-15",
-      riskTolerance: "Aggressive",
-    },
-  };
+  // Transform database data to match component expectations
+  const client = household ? {
+    id: household.id,
+    name: household.householdName || household.primaryContactName || "Unknown Client",
+    email: household.email || "No email",
+    phone: household.phone || "No phone",
+    netWorth: parseFloat(household.totalNetWorth || "0"),
+    portfolioValue: parseFloat(household.totalNetWorth || "0") * 0.6, // Estimate
+    performance1d: 0.5, // Mock for now
+    performanceYtd: 8.5, // Mock for now
+    nextMeeting: meetings[0] ? new Date(meetings[0].meetingDate).toLocaleString() : "No upcoming meeting",
+    retirementDate: "2035-06-15", // Mock for now
+    riskTolerance: household.riskTolerance ? 
+      household.riskTolerance.charAt(0).toUpperCase() + household.riskTolerance.slice(1) : 
+      "Moderate",
+  } : null;
 
-  const client = clientData[householdId] || clientData[1];
+  if (householdLoading) {
+    return (
+      <DashboardLayout>
+        <div className="p-4 md:p-6 flex items-center justify-center">
+          <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+        </div>
+      </DashboardLayout>
+    );
+  }
 
-  const holdings = [
-    { ticker: "AAPL", name: "Apple Inc.", value: 250000, allocation: 20, change: 2.3 },
-    { ticker: "MSFT", name: "Microsoft Corp.", value: 200000, allocation: 16, change: 1.8 },
-    { ticker: "GOOGL", name: "Alphabet Inc.", value: 150000, allocation: 12, change: -0.5 },
-    { ticker: "AMZN", name: "Amazon.com Inc.", value: 125000, allocation: 10, change: 3.2 },
-    { ticker: "TSLA", name: "Tesla Inc.", value: 100000, allocation: 8, change: -1.2 },
-  ];
+  if (!client) {
+    return (
+      <DashboardLayout>
+        <div className="p-4 md:p-6">
+          <div className="text-center">
+            <h2 className="text-2xl font-bold">Client not found</h2>
+            <Button asChild className="mt-4">
+              <Link href="/clients">Back to Clients</Link>
+            </Button>
+          </div>
+        </div>
+      </DashboardLayout>
+    );
+  }
+
+  // Holdings are already fetched from database above
 
   const transactions = [
     { date: "2025-11-10", type: "Buy", ticker: "AAPL", shares: 50, amount: 8750 },
@@ -224,28 +218,35 @@ export default function ClientDetail() {
                 <CardDescription>Largest positions by value</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
-                {holdings.map((holding) => (
-                  <div key={holding.ticker} className="flex items-center justify-between">
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-1">
-                        <span className="font-semibold">{holding.ticker}</span>
-                        <span className="text-sm text-muted-foreground">{holding.name}</span>
+                {holdings.map((holding: any) => {
+                  const currentValue = parseFloat(holding.currentValue || "0");
+                  const costBasis = parseFloat(holding.costBasis || "0");
+                  const change = costBasis > 0 ? ((currentValue - costBasis) / costBasis) * 100 : 0;
+                  const allocation = client.portfolioValue > 0 ? (currentValue / client.portfolioValue) * 100 : 0;
+                  
+                  return (
+                    <div key={holding.id} className="flex items-center justify-between">
+                      <div className="flex-1">
+                        <div className="flex items-center gap-2 mb-1">
+                          <span className="font-semibold">{holding.ticker}</span>
+                          <span className="text-sm text-muted-foreground">{holding.companyName || holding.ticker}</span>
+                        </div>
+                        <div className="w-full bg-secondary rounded-full h-2">
+                          <div
+                            className="bg-primary h-2 rounded-full"
+                            style={{ width: `${Math.min(allocation, 100)}%` }}
+                          />
+                        </div>
                       </div>
-                      <div className="w-full bg-secondary rounded-full h-2">
-                        <div
-                          className="bg-primary h-2 rounded-full"
-                          style={{ width: `${holding.allocation}%` }}
-                        />
+                      <div className="text-right ml-4">
+                        <p className="font-semibold">{formatCurrency(currentValue)}</p>
+                        <p className={`text-sm ${change >= 0 ? "text-green-600" : "text-red-600"}`}>
+                          {change >= 0 ? "+" : ""}{change.toFixed(1)}%
+                        </p>
                       </div>
                     </div>
-                    <div className="text-right ml-4">
-                      <p className="font-semibold">{formatCurrency(holding.value)}</p>
-                      <p className={`text-sm ${holding.change >= 0 ? "text-green-600" : "text-red-600"}`}>
-                        {holding.change >= 0 ? "+" : ""}{holding.change}%
-                      </p>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </CardContent>
             </Card>
 

@@ -89,6 +89,12 @@ export const appRouter = router({
         return await db.getMeetingsByClient(input.clientId);
       }),
     
+    getUpcoming: protectedProcedure
+      .input(z.object({ limit: z.number().optional() }))
+      .query(async ({ ctx, input }) => {
+        return await db.getUpcomingMeetingsByAdvisor(ctx.user.id, input.limit || 10);
+      }),
+    
     create: protectedProcedure
       .input(z.object({
         clientId: z.number(),

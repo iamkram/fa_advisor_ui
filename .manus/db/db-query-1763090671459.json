@@ -1,0 +1,46 @@
+{
+  "query": "SHOW TABLES;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SHOW TABLES;",
+  "rows": [
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "__drizzle_migrations"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "accounts"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "aiQueries"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "clients"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "holdings"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "households"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "interactions"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "meetings"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "newsCache"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "sp500Companies"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "tasks"
+    },
+    {
+      "Tables_in_kFJtgTpgUE3TsdNQK7TMEr": "users"
+    }
+  ],
+  "messages": [],
+  "stdout": "Tables_in_kFJtgTpgUE3TsdNQK7TMEr\n__drizzle_migrations\naccounts\naiQueries\nclients\nholdings\nhouseholds\ninteractions\nmeetings\nnewsCache\nsp500Companies\ntasks\nusers\n",
+  "stderr": "",
+  "execution_time_ms": 895
+}

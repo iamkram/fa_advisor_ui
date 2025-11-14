@@ -1,4 +1,4 @@
-import { desc, eq } from "drizzle-orm";
+import { desc, eq, and, gte, lte } from "drizzle-orm";
 import { drizzle } from "drizzle-orm/mysql2";
 import {
   users,
@@ -308,4 +308,76 @@ export async function getHoldingsByClient(householdId: number) {
 
 export async function getMeetingsByClient(householdId: number) {
   return getMeetingsByHousehold(householdId);
+}
+
+// Get upcoming meetings for advisor's dashboard
+export async function getUpcomingMeetingsByAdvisor(advisorId: number, limit: number = 10) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const now = new Date();
+  const endOfToday = new Date(now);
+  endOfToday.setHours(23, 59, 59, 999);
+  
+  const result = await db
+    .select({
+      meeting: meetings,
+      household: households,
+    })
+    .from(meetings)
+    .innerJoin(households, eq(meetings.householdId, households.id))
+    .where(
+      and(
+        eq(meetings.advisorId, advisorId),
+        gte(meetings.meetingDate, now),
+        lte(meetings.meetingDate, endOfToday)
+      )
+    )
+    .orderBy(meetings.meetingDate)
+    .limit(limit);
+  
+  return result.map(r => ({
+    ...r.meeting,
+    householdName: r.household.householdName,
+    primaryContactName: r.household.primaryContactName,
+  }));
+}
+
+// Get household summary with aggregated financial data
+export async function getHouseholdSummary(householdId: number) {
+  const db = await getDb();
+  if (!db) throw new Error("Database not available");
+  
+  const household = await getHouseholdById(householdId);
+  if (!household) return null;
+  
+  const accountsList = await getAccountsByHousehold(householdId);
+  
+  // Calculate total portfolio value and performance
+  let totalPortfolioValue = 0;
+  let totalCostBasis = 0;
+  let weightedYtdReturn = 0;
+  
+  for (const account of accountsList) {
+    const accountValue = parseFloat(account.currentValue?.toString() || "0");
+    const costBasis = parseFloat(account.costBasis?.toString() || "0");
+    const ytdReturn = parseFloat(account.ytdReturn?.toString() || "0");
+    
+    totalPortfolioValue += accountValue;
+    totalCostBasis += costBasis;
+    
+    if (accountValue > 0) {
+      weightedYtdReturn += ytdReturn * accountValue;
+    }
+  }
+  
+  const avgYtdReturn = totalPortfolioValue > 0 ? weightedYtdReturn / totalPortfolioValue : 0;
+  
+  return {
+    ...household,
+    totalPortfolioValue,
+    totalCostBasis,
+    ytdReturn: avgYtdReturn,
+    accountCount: accountsList.length,
+  };
 }

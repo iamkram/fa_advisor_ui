@@ -6,9 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Calendar, TrendingUp, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 import { getLoginUrl } from "@/const";
 import { Link } from "wouter";
+import { trpc } from "@/lib/trpc";
 
 export default function Home() {
   const { user, loading, isAuthenticated } = useAuth();
+  
+  // Fetch upcoming meetings from database (must be before conditional returns)
+  const { data: meetingsData = [], isLoading: meetingsLoading } = trpc.meetings.getUpcoming.useQuery(
+    { limit: 5 },
+    { enabled: isAuthenticated } // Only fetch when authenticated
+  );
 
   if (loading) {
     return (
@@ -38,23 +45,15 @@ export default function Home() {
     );
   }
 
-  // Mock data for demonstration
-  const upcomingMeetings = [
-    {
-      id: 1,
-      clientName: "John Smith",
-      time: "10:00 AM",
-      type: "Quarterly Review",
-      talkingPoints: ["Portfolio performance +12.3% YTD", "Tax-loss harvesting opportunity", "Rebalancing recommendation"],
-    },
-    {
-      id: 2,
-      clientName: "Sarah Johnson",
-      time: "2:00 PM",
-      type: "Planning Session",
-      talkingPoints: ["Retirement timeline update", "529 plan contribution", "Estate planning review"],
-    },
-  ];
+  const upcomingMeetings = meetingsData.map((meeting: any) => ({
+    id: meeting.householdId,
+    clientName: meeting.householdName || meeting.primaryContactName || "Unknown Client",
+    time: new Date(meeting.meetingDate).toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' }),
+    type: meeting.meetingType === "review" ? "Quarterly Review" : 
+          meeting.meetingType === "planning" ? "Planning Session" :
+          meeting.meetingType === "onboarding" ? "Onboarding" : "Check-in",
+    talkingPoints: meeting.notes ? [meeting.notes] : ["Portfolio review", "Performance discussion", "Next steps"],
+  }));
 
   const tasks = [
     { id: 1, title: "Review tax-loss harvesting for Q4", priority: "high", completed: false },
