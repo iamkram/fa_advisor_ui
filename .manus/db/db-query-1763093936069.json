@@ -1,0 +1,16 @@
+{
+  "query": "SELECT COUNT(*) as total, MIN(totalNetWorth) as min_value, MAX(totalNetWorth) as max_value, AVG(totalNetWorth) as avg_value FROM households;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT COUNT(*) as total, MIN(totalNetWorth) as min_value, MAX(totalNetWorth) as max_value, AVG(totalNetWorth) as avg_value FROM households;",
+  "rows": [
+    {
+      "total": "1545",
+      "min_value": "2836680.56",
+      "max_value": "12168543.74",
+      "avg_value": "7077190.101722"
+    }
+  ],
+  "messages": [],
+  "stdout": "total\tmin_value\tmax_value\tavg_value\n1545\t2836680.56\t12168543.74\t7077190.101722\n",
+  "stderr": "",
+  "execution_time_ms": 411
+}

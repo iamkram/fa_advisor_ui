@@ -1,0 +1,14 @@
+{
+  "query": "SELECT COUNT(*) as total_households, (SELECT COUNT(DISTINCT advisorId) FROM households) as total_advisors FROM households;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT COUNT(*) as total_households, (SELECT COUNT(DISTINCT advisorId) FROM households) as total_advisors FROM households;",
+  "rows": [
+    {
+      "total_households": "10000",
+      "total_advisors": "100"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_households\ttotal_advisors\n10000\t100\n",
+  "stderr": "",
+  "execution_time_ms": 413
+}

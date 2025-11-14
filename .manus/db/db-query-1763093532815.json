@@ -1,0 +1,14 @@
+{
+  "query": "SELECT COUNT(*) as total_accounts, COUNT(DISTINCT householdId) as unique_households FROM accounts;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT COUNT(*) as total_accounts, COUNT(DISTINCT householdId) as unique_households FROM accounts;",
+  "rows": [
+    {
+      "total_accounts": "70000",
+      "unique_households": "10000"
+    }
+  ],
+  "messages": [],
+  "stdout": "total_accounts\tunique_households\n70000\t10000\n",
+  "stderr": "",
+  "execution_time_ms": 431
+}

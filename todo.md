@@ -216,3 +216,13 @@
 - [x] Add loading state
 - [x] Test search functionality
 - [ ] Create checkpoint
+
+## Phase 27: Generate Synthetic Client Data
+- [x] Audit database structure (households, accounts, holdings)
+- [x] Check existing data in accounts table (10,000 accounts)
+- [x] Create data generation script for households
+- [x] Generate realistic household data (names, emails, risk tolerance)
+- [x] Link households to existing accounts
+- [x] Populate households table (50 households with $7-9M portfolios)
+- [x] Verify data integrity
+- [x] Test application with synthetic data

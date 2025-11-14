@@ -6,13 +6,22 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 
 export default function Clients() {
   const [searchQuery, setSearchQuery] = useState("");
   
   // Fetch clients from database
   const { data: clientsData = [], isLoading } = trpc.clients.list.useQuery();
+  
+  // Helper function to format currency
+  const formatCurrency = useCallback((value: number) => {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 0,
+    }).format(value);
+  }, []);
   
   // Transform and filter clients
   const allClients = clientsData.map((household: any) => ({
@@ -49,15 +58,7 @@ export default function Clients() {
       
       return false;
     });
-  }, [allClients, searchQuery]);
-
-  const formatCurrency = (value: number) => {
-    return new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-      minimumFractionDigits: 0,
-    }).format(value);
-  };
+  }, [allClients, searchQuery, formatCurrency]);
 
   return (
     <DashboardLayout>

@@ -1,0 +1,9 @@
+{
+  "query": "UPDATE users SET advisorId = 1 WHERE openId = '9srQyaq7dRmfvUy3QukL6w';",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute UPDATE users SET advisorId = 1 WHERE openId = '9srQyaq7dRmfvUy3QukL6w';",
+  "rows": [],
+  "messages": [],
+  "stdout": "",
+  "stderr": "",
+  "execution_time_ms": 400
+}

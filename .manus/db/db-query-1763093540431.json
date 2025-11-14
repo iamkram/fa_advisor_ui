@@ -1,0 +1,58 @@
+{
+  "query": "SELECT * FROM accounts LIMIT 3;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT * FROM accounts LIMIT 3;",
+  "rows": [
+    {
+      "id": "1",
+      "householdId": "1",
+      "accountNumber": "ACC0000000001",
+      "accountName": "401K Account",
+      "accountType": "401k",
+      "ownerName": "Linda Martinez",
+      "currentValue": "1460277.26",
+      "costBasis": "1321989.00",
+      "ytdReturn": "0.3098",
+      "oneYearReturn": "0.2352",
+      "status": "active",
+      "salesforceId": "NULL",
+      "createdAt": "2025-11-13 14:05:30",
+      "updatedAt": "2025-11-13 14:05:30"
+    },
+    {
+      "id": "2",
+      "householdId": "1",
+      "accountNumber": "ACC0000000002",
+      "accountName": "TAXABLE Account",
+      "accountType": "taxable",
+      "ownerName": "Linda Davis",
+      "currentValue": "1712077.11",
+      "costBasis": "1221909.43",
+      "ytdReturn": "0.0275",
+      "oneYearReturn": "-0.1688",
+      "status": "active",
+      "salesforceId": "NULL",
+      "createdAt": "2025-11-13 14:05:30",
+      "updatedAt": "2025-11-13 14:05:30"
+    },
+    {
+      "id": "3",
+      "householdId": "1",
+      "accountNumber": "ACC0000000003",
+      "accountName": "TAXABLE Account",
+      "accountType": "taxable",
+      "ownerName": "Linda Martinez",
+      "currentValue": "925306.00",
+      "costBasis": "690833.46",
+      "ytdReturn": "-0.0050",
+      "oneYearReturn": "-0.1103",
+      "status": "active",
+      "salesforceId": "NULL",
+      "createdAt": "2025-11-13 14:05:30",
+      "updatedAt": "2025-11-13 14:05:30"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\thouseholdId\taccountNumber\taccountName\taccountType\townerName\tcurrentValue\tcostBasis\tytdReturn\toneYearReturn\tstatus\tsalesforceId\tcreatedAt\tupdatedAt\n1\t1\tACC0000000001\t401K Account\t401k\tLinda Martinez\t1460277.26\t1321989.00\t0.3098\t0.2352\tactive\tNULL\t2025-11-13 14:05:30\t2025-11-13 14:05:30\n2\t1\tACC0000000002\tTAXABLE Account\ttaxable\tLinda Davis\t1712077.11\t1221909.43\t0.0275\t-0.1688\tactive\tNULL\t2025-11-13 14:05:30\t2025-11-13 14:05:30\n3\t1\tACC0000000003\tTAXABLE Account\ttaxable\tLinda Martinez\t925306.00\t690833.46\t-0.0050\t-0.1103\tactive\tNULL\t2025-11-13 14:05:30\t2025-11-13 14:05:30\n",
+  "stderr": "",
+  "execution_time_ms": 390
+}

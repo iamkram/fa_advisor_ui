@@ -1,0 +1,50 @@
+{
+  "query": "SELECT id, householdName FROM households LIMIT 10;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT id, householdName FROM households LIMIT 10;",
+  "rows": [
+    {
+      "id": "1",
+      "householdName": "Clark Family"
+    },
+    {
+      "id": "2",
+      "householdName": "Johnson Family"
+    },
+    {
+      "id": "3",
+      "householdName": "Ramirez Family"
+    },
+    {
+      "id": "4",
+      "householdName": "Thompson Family"
+    },
+    {
+      "id": "5",
+      "householdName": "Davis Family"
+    },
+    {
+      "id": "6",
+      "householdName": "Moore Family"
+    },
+    {
+      "id": "7",
+      "householdName": "Thomas Family"
+    },
+    {
+      "id": "8",
+      "householdName": "Gonzalez Family"
+    },
+    {
+      "id": "9",
+      "householdName": "Anderson Family"
+    },
+    {
+      "id": "10",
+      "householdName": "Davis Family"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\thouseholdName\n1\tClark Family\n2\tJohnson Family\n3\tRamirez Family\n4\tThompson Family\n5\tDavis Family\n6\tMoore Family\n7\tThomas Family\n8\tGonzalez Family\n9\tAnderson Family\n10\tDavis Family\n",
+  "stderr": "",
+  "execution_time_ms": 411
+}

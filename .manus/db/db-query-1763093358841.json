@@ -1,0 +1,30 @@
+{
+  "query": "SELECT advisorId, COUNT(*) as household_count FROM households GROUP BY advisorId LIMIT 5;",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT advisorId, COUNT(*) as household_count FROM households GROUP BY advisorId LIMIT 5;",
+  "rows": [
+    {
+      "advisorId": "90101",
+      "household_count": "100"
+    },
+    {
+      "advisorId": "90102",
+      "household_count": "100"
+    },
+    {
+      "advisorId": "90103",
+      "household_count": "100"
+    },
+    {
+      "advisorId": "90104",
+      "household_count": "100"
+    },
+    {
+      "advisorId": "90105",
+      "household_count": "100"
+    }
+  ],
+  "messages": [],
+  "stdout": "advisorId\thousehold_count\n90101\t100\n90102\t100\n90103\t100\n90104\t100\n90105\t100\n",
+  "stderr": "",
+  "execution_time_ms": 387
+}
