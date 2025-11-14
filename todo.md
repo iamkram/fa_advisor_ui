@@ -250,4 +250,4 @@
 - [x] Fix "View All Insights" button to link to AI Insights page
 - [x] Fix "View All Tasks" button to link to Tasks page
 - [x] Test all navigation links
-- [ ] Save checkpoint and commit to GitHub
+- [x] Save checkpoint and commit to GitHub
