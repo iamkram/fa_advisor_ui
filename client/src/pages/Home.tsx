@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Calendar, TrendingUp, AlertTriangle, CheckCircle2, Clock } from "lucide-react";
 import { getLoginUrl } from "@/const";
+import { Link } from "wouter";
 
 export default function Home() {
   const { user, loading, isAuthenticated } = useAuth();
@@ -102,7 +103,9 @@ export default function Home() {
                       <span>{meeting.type}</span>
                     </div>
                   </div>
-                  <Button size="sm">View Details</Button>
+                  <Button size="sm" asChild>
+                    <Link href={`/client/${meeting.id}`}>View Details</Link>
+                  </Button>
                 </div>
                 <div>
                   <p className="text-sm font-medium text-muted-foreground mb-2">Top 3 Talking Points:</p>
