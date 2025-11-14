@@ -6,12 +6,16 @@ import { Badge } from "@/components/ui/badge";
 import { Search, Plus, TrendingUp, TrendingDown } from "lucide-react";
 import { Link } from "wouter";
 import { trpc } from "@/lib/trpc";
+import { useState, useMemo } from "react";
 
 export default function Clients() {
+  const [searchQuery, setSearchQuery] = useState("");
+  
   // Fetch clients from database
   const { data: clientsData = [], isLoading } = trpc.clients.list.useQuery();
   
-  const clients = clientsData.map((household: any) => ({
+  // Transform and filter clients
+  const allClients = clientsData.map((household: any) => ({
     id: household.id,
     name: household.householdName || household.primaryContactName || "Unknown",
     email: household.email || "No email",
@@ -22,6 +26,30 @@ export default function Clients() {
       household.riskTolerance.charAt(0).toUpperCase() + household.riskTolerance.slice(1) : 
       "Moderate",
   }));
+
+  // Filter clients based on search query
+  const clients = useMemo(() => {
+    if (!searchQuery.trim()) return allClients;
+    
+    const query = searchQuery.toLowerCase();
+    return allClients.filter(client => {
+      // Search by name
+      if (client.name.toLowerCase().includes(query)) return true;
+      
+      // Search by email
+      if (client.email.toLowerCase().includes(query)) return true;
+      
+      // Search by portfolio value (e.g., "1000000" or "1M")
+      const portfolioStr = client.portfolioValue.toString();
+      if (portfolioStr.includes(query)) return true;
+      
+      // Search by formatted currency (e.g., "$1,250,000")
+      const formattedValue = formatCurrency(client.portfolioValue).toLowerCase();
+      if (formattedValue.includes(query)) return true;
+      
+      return false;
+    });
+  }, [allClients, searchQuery]);
 
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat("en-US", {
@@ -52,7 +80,12 @@ export default function Clients() {
             <div className="flex flex-col sm:flex-row gap-3 md:gap-4">
               <div className="flex-1 relative">
                 <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
-                <Input placeholder="Search clients..." className="pl-10 h-11" />
+                <Input 
+                  placeholder="Search by name, email, or portfolio value..." 
+                  className="pl-10 h-11"
+                  value={searchQuery}
+                  onChange={(e) => setSearchQuery(e.target.value)}
+                />
               </div>
               <div className="flex gap-3 md:gap-4">
                 <Button variant="outline" className="flex-1 sm:flex-none h-11">Filter</Button>
@@ -63,8 +96,32 @@ export default function Clients() {
         </Card>
 
         {/* Client list */}
-        <div className="grid gap-3 md:gap-4">
-          {clients.map((client) => (
+        {isLoading ? (
+          <div className="flex items-center justify-center py-12">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary" />
+          </div>
+        ) : clients.length === 0 ? (
+          <Card className="card-shadow">
+            <CardContent className="py-12 text-center">
+              <Search className="w-12 h-12 mx-auto mb-4 text-muted-foreground" />
+              <h3 className="text-lg font-semibold mb-2">
+                {searchQuery ? "No clients found" : "No clients yet"}
+              </h3>
+              <p className="text-muted-foreground mb-4">
+                {searchQuery 
+                  ? `No clients match "${searchQuery}". Try a different search term.`
+                  : "Add your first client to get started."}
+              </p>
+              {searchQuery && (
+                <Button variant="outline" onClick={() => setSearchQuery("")}>
+                  Clear Search
+                </Button>
+              )}
+            </CardContent>
+          </Card>
+        ) : (
+          <div className="grid gap-3 md:gap-4">
+            {clients.map((client) => (
             <Card key={client.id} className="card-shadow hover:border-primary/50 transition-colors cursor-pointer">
               <CardContent className="pt-4 md:pt-6">
                 <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
@@ -125,7 +182,8 @@ export default function Clients() {
               </CardContent>
             </Card>
           ))}
-        </div>
+          </div>
+        )}
       </div>
     </DashboardLayout>
   );
