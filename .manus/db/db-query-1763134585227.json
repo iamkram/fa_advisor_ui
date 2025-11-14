@@ -1,0 +1,34 @@
+{
+  "query": "SELECT br.id, br.status, br.totalHouseholds, br.successfulHouseholds, COUNT(hi.id) as insights_count, SUM(JSON_LENGTH(hi.talkingPoints)) as total_talking_points FROM batchRuns br LEFT JOIN householdInsights hi ON br.id = hi.batchRunId GROUP BY br.id ORDER BY br.id DESC LIMIT 5",
+  "command": "mysql --batch --raw --column-names --default-character-set=utf8mb4 --host gateway02.us-east-1.prod.aws.tidbcloud.com --port 4000 --user 3cxdAvZmDe4snPE.root --database kFJtgTpgUE3TsdNQK7TMEr --execute SELECT br.id, br.status, br.totalHouseholds, br.successfulHouseholds, COUNT(hi.id) as insights_count, SUM(JSON_LENGTH(hi.talkingPoints)) as total_talking_points FROM batchRuns br LEFT JOIN householdInsights hi ON br.id = hi.batchRunId GROUP BY br.id ORDER BY br.id DESC LIMIT 5",
+  "rows": [
+    {
+      "id": "30001",
+      "status": "running",
+      "totalHouseholds": "3",
+      "successfulHouseholds": "0",
+      "insights_count": "3",
+      "total_talking_points": "21"
+    },
+    {
+      "id": "2",
+      "status": "completed",
+      "totalHouseholds": "3",
+      "successfulHouseholds": "3",
+      "insights_count": "3",
+      "total_talking_points": "0"
+    },
+    {
+      "id": "1",
+      "status": "completed",
+      "totalHouseholds": "3",
+      "successfulHouseholds": "0",
+      "insights_count": "3",
+      "total_talking_points": "0"
+    }
+  ],
+  "messages": [],
+  "stdout": "id\tstatus\ttotalHouseholds\tsuccessfulHouseholds\tinsights_count\ttotal_talking_points\n30001\trunning\t3\t0\t3\t21\n2\tcompleted\t3\t3\t3\t0\n1\tcompleted\t3\t0\t3\t0\n",
+  "stderr": "",
+  "execution_time_ms": 498
+}

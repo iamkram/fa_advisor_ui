@@ -226,3 +226,15 @@
 - [x] Populate households table (50 households with $7-9M portfolios)
 - [x] Verify data integrity
 - [x] Test application with synthetic data
+
+## Phase 28: Batch Monitoring Dashboard
+- [x] Create admin batch dashboard page (/admin/batch-runs)
+- [x] Display batch run history with pagination
+- [x] Show success rates and processing metrics
+- [x] Add batch run detail view with household insights
+- [ ] Implement filtering by status and date range (future enhancement)
+- [x] Add stats cards (total runs, success rate, avg processing time)
+- [x] Create batch run timeline visualization
+- [x] Add navigation link in sidebar for admin users
+- [x] Test dashboard with real batch data
+- [x] Create checkpoint

@@ -16,6 +16,7 @@ import Documents from "./pages/Documents";
 import AIInsights from "./pages/AIInsights";
 import ClientDetail from "./pages/client/ClientDetail";
 import ReportGenerator from "./pages/ReportGenerator";
+import BatchRuns from "./pages/admin/BatchRuns";
 
 function Router() {
   return (
@@ -32,6 +33,7 @@ function Router() {
       <Route path={"/tasks"} component={Tasks} />
       <Route path={"/documents"} component={Documents} />
       <Route path={"/ai-insights"} component={AIInsights} />
+      <Route path={"/admin/batch-runs"} component={BatchRuns} />
       <Route path={"/404"} component={NotFound} />
       <Route component={NotFound} />
     </Switch>
