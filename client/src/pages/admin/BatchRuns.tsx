@@ -13,9 +13,12 @@ import {
   Users,
   RefreshCw,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  ArrowLeft,
+  Home
 } from "lucide-react";
 import { formatDistanceToNow } from "date-fns";
+import { Link } from "wouter";
 
 export default function BatchRuns() {
   const [expandedRun, setExpandedRun] = useState<number | null>(null);
@@ -55,13 +58,37 @@ export default function BatchRuns() {
 
   return (
     <div className="container py-8">
+      {/* Breadcrumb Navigation */}
+      <div className="mb-6">
+        <nav className="flex items-center gap-2 text-sm text-muted-foreground">
+          <Link href="/">
+            <a className="flex items-center gap-1 hover:text-foreground transition-colors">
+              <Home className="h-4 w-4" />
+              <span>Home</span>
+            </a>
+          </Link>
+          <span>/</span>
+          <span className="text-foreground font-medium">Admin</span>
+          <span>/</span>
+          <span className="text-foreground font-medium">Batch Runs</span>
+        </nav>
+      </div>
+
       {/* Header */}
       <div className="mb-8 flex items-center justify-between">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Batch Run Monitoring</h1>
-          <p className="text-muted-foreground mt-2">
-            Monitor nightly AI insight generation batch jobs
-          </p>
+        <div className="flex items-center gap-4">
+          <Link href="/">
+            <Button variant="ghost" size="sm" className="gap-2">
+              <ArrowLeft className="h-4 w-4" />
+              Back
+            </Button>
+          </Link>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Batch Run Monitoring</h1>
+            <p className="text-muted-foreground mt-2">
+              Monitor nightly AI insight generation batch jobs
+            </p>
+          </div>
         </div>
         <Button onClick={() => refetch()} variant="outline" size="sm">
           <RefreshCw className="h-4 w-4 mr-2" />

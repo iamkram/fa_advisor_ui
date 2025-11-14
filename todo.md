@@ -238,3 +238,10 @@
 - [x] Add navigation link in sidebar for admin users
 - [x] Test dashboard with real batch data
 - [x] Create checkpoint
+
+## Phase 29: Batch Run Monitoring Navigation
+- [x] Add breadcrumb navigation to Batch Run Monitoring page
+- [x] Add back button to return to home/admin section
+- [x] Improve page header with navigation context
+- [x] Test navigation flow
+- [x] Commit to GitHub
